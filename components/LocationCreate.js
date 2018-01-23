@@ -3,9 +3,16 @@ import{Text,View,Picker,AsyncStorage} from 'react-native';
 import {Card,CardSection,Input,Button} from './common';
 import { StyleSheet } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
+import { connect } from 'react-redux';
+import { locationCreate } from '../src/actions/LocationActions';
+import { StackNavigator } from 'react-navigation';
+ 
 
 class LocationCreate extends Component {
     
+    static navigationOptions = {
+        title: 'Location Create',
+      }
     constructor(props) {
         super(props);
         this.state = {
@@ -114,7 +121,8 @@ class LocationCreate extends Component {
         return;
     }
     onCButtonPress(){
-        const fprop= {Flatitude:'',Flongitude:'2'};
+       
+        const fprop= {Flatitude:'',Flongitude:'2',Ftag:''};
         if(this.state.pval==1){
             fprop.Flatitude=this.state.lastLat;
             fprop.Flongitude=this.state.lastLong;
@@ -123,19 +131,20 @@ class LocationCreate extends Component {
             fprop.Flatitude=this.state.marker.latitude;
             fprop.Flongitude=this.state.marker.longitude;
         }
+        fprop.Ftag=this.state.tagname;
         console.log(fprop);
-        let fdata={
-            latitude:fprop.latitude,
-            longitude:fprop.longitude,
-        }
+        
         
 
-        AsyncStorage.setItem(this.state.tagname,JSON.stringify(fprop),()=>{console.log('sucess')});
-        return AsyncStorage.getItem(this.state.tagname).then((value) => {
-            console.log( JSON.parse(value));
-        });
-        const keys=AsyncStorage.getAllKeys();
-        console.log(keys);
+       // AsyncStorage.setItem(this.state.tagname,JSON.stringify(fprop),()=>{console.log('sucess')});
+       // return AsyncStorage.getItem(this.state.tagname).then((value) => {
+       //     console.log( JSON.parse(value));
+       // });
+     //   const keys=AsyncStorage.getAllKeys();
+        console.log(fprop);
+        
+      //  data.push(fprop);
+        this.props.navigation.navigate('LocationList', {location:fprop});
     }
 
         render()
@@ -235,5 +244,6 @@ const styles={
         position:'relative',
     },
 };
+
 
 export default LocationCreate;

@@ -8,15 +8,15 @@ const RouterComponent=()=>{
     return(
         <Router>
         <Scene key="root" hideNavBar={true}>
-        <Scene 
+            <Scene 
             key="LocationList" 
             component={LocationList} 
-            title="Employees" 
+            title="Location List" 
             onRight={()=>Actions.LCreateScene()}
             rightTitle="Add"
             />
             <Scene key="LCreateScene" title="Create Employee" component={LocationCreate}  initial/>
-        <Scene key="OpenMap" title="Your Location" component={MapLocate}/>
+            <Scene key="OpenMap" title="Your Location" component={MapLocate}/>
         </Scene>
         </Router>
     );
