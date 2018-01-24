@@ -1,5 +1,4 @@
 import  React ,{ Component } from 'react';
-import Router from './Router';
 import { StackNavigator } from 'react-navigation';
 import LocationCreate from './components/LocationCreate';
 import LocationList from './components/LocationList';

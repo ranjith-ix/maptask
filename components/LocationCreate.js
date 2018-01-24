@@ -3,8 +3,6 @@ import{Text,View,Picker,AsyncStorage} from 'react-native';
 import {Card,CardSection,Input,Button} from './common';
 import { StyleSheet,Dimensions } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import { connect } from 'react-redux';
-import { locationCreate } from '../src/actions/LocationActions';
 import { StackNavigator } from 'react-navigation';
  
 let { width, height } = Dimensions.get('window');
@@ -47,7 +45,7 @@ class LocationCreate extends Component {
     };
 
     componentDidMount(){
-
+  
         this.watchID = navigator.geolocation.watchPosition((position) => {
             // Create the object to update this.state.mapRegion through the onRegionChange function
             let region = {

@@ -79,16 +79,9 @@ class MapLocate extends Component{
     onMapLayout = () => {
         this.setState({ isMapReady: true });
     }
-    onMapPress(e) {
-        alert("coordinates:" + JSON.stringify(e.nativeEvent.coordinate))
-        const coordinate=e.nativeEvent.coordinate;
-          this.setState({
-          //  marker: { ...this.state.marker,latitude:coordinate.latitude,longitude:coordinate.longitude},
-            region: { ...this.state.region,latitude:coordinate.latitude,longitude:coordinate.longitude},
-          })
-          console.log(this.state.marker);
-      }
-    
+    handleMapRegionChange = mapRegion => {
+        this.setState({ region:mapRegion });
+    };  
 
     renderMap(){
         const ix=this.props.navigation.state.params.location;
@@ -107,7 +100,8 @@ class MapLocate extends Component{
                    showsBuildings
                    region={this.state.region}
                    onLayout={this.onMapLayout}
-                   onPress={this.onMapPress.bind(this)}
+                   onRegionChangeComplete={this.handleMapRegionChange.bind(this)}                   
+
                  >
                      <Marker coordinate={this.state.marker} title={ix.Ftag} showTitle>
                        

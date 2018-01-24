@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import { Button, CardSection } from './common/index';
-import {View,FlatList,ListView,Text,AsyncStorage } from 'react-native';
+import {View,FlatList,Text,AsyncStorage } from 'react-native';
 import ListItem from './common/ListItem';
 
 class LocationList extends Component{
