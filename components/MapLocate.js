@@ -108,8 +108,7 @@ class MapLocate extends Component{
                      </Marker>
                 </MapView>
                </View>
-            );
-      
+            ); 
     }
 
     render(){
