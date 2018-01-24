@@ -1,9 +1,17 @@
 import React,{Component} from 'react';
 import MapView, { Marker } from 'react-native-maps';
-import {View} from 'react-native';
+import {View,Dimensions} from 'react-native';
 import {Card,CardSection} from './common';
 
+let { width, height } = Dimensions.get('window');
+const ASPECT_RATIO = width / height;
+const LATITUDE_DELTA = 0.014 ;//Very high zoom level
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
 class MapLocate extends Component{
+    static navigationOptions = {
+        title: 'Your Saved Location on Map',
+      }
     constructor(props) {
         super(props);
         this.state = {
@@ -15,23 +23,25 @@ class MapLocate extends Component{
         lastLat: null,
         lastLong: null,
        
-       isMapReady: false,
-       region: {
-        latitude: 37.78825,
-        longitude: -122.4324,
-        latitudeDelta: 3,
-        longitudeDelta: 4,
-       },
-       marker: {
-           latitude: 37.78825,
-           longitude: -122.4324,
-           latitudeDelta: 3,
-           longitudeDelta: 4,
+        isMapReady: false,
+        region: {
+          latitude: 11.108524,
+          longitude: 77.341066,
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA
+        },
+        marker: {
+            latitude: 22.108524,
+            longitude: 77.341066,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta:LONGITUDE_DELTA
     },
     }
     };
 
     componentDidMount(){
+
+      
 
         this.watchID = navigator.geolocation.watchPosition((position) => {
             // Create the object to update this.state.mapRegion through the onRegionChange function

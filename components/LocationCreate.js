@@ -1,13 +1,16 @@
 import React,{Component} from 'react';
 import{Text,View,Picker,AsyncStorage} from 'react-native';
 import {Card,CardSection,Input,Button} from './common';
-import { StyleSheet } from 'react-native';
+import { StyleSheet,Dimensions } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { connect } from 'react-redux';
 import { locationCreate } from '../src/actions/LocationActions';
 import { StackNavigator } from 'react-navigation';
  
-
+let { width, height } = Dimensions.get('window');
+const ASPECT_RATIO = width / height;
+const LATITUDE_DELTA = 0.014 ;//Very high zoom level
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 class LocationCreate extends Component {
     
     static navigationOptions = {
@@ -24,20 +27,21 @@ class LocationCreate extends Component {
         mapRegion: null,
         lastLat: null,
         lastLong: null,
+        Cregion:null,
 
 
         isMapReady: false,
         region: {
-          latitude: 47.6062,
-          longitude: 122.3321,
-          latitudeDelta: 0.02,
-          longitudeDelta: 0.02
+          latitude: 11.108524,
+          longitude: 77.341066,
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA
         },
         marker: {
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.02,
-            longitudeDelta: 0.02
+            latitude: 22.108524,
+            longitude: 77.341066,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta:LONGITUDE_DELTA
     },
     }
     };
@@ -61,7 +65,9 @@ class LocationCreate extends Component {
           mapRegion: region,
           // If there are no new values set the current ones
           lastLat: lastLat || this.state.lastLat,
-          lastLong: lastLong || this.state.lastLong
+          lastLong: lastLong || this.state.lastLong,
+          region:region,
+
         });
         console.log(lastLong);
       }
@@ -72,6 +78,9 @@ class LocationCreate extends Component {
     }
     lUpdate(value){
         this.setState({pval:value},function(){console.log(this.state.pval)});
+        this.setState({
+            region: { ...this.state.region,latitude:this.state.lastLat,longitude:this.state.lastLong},
+        });
     }
 
     onMapLayout = () => {
@@ -79,20 +88,23 @@ class LocationCreate extends Component {
     }
 
     onMapPress(e) {
+        if(this.state.pval==2){
         alert("coordinates:" + JSON.stringify(e.nativeEvent.coordinate))
         const coordinate=e.nativeEvent.coordinate;
           this.setState({
             marker: { ...this.state.marker,latitude:coordinate.latitude,longitude:coordinate.longitude},
-            region: { ...this.state.region,latitude:coordinate.latitude,longitude:coordinate.longitude},
+           region: this.state.Cregion,
           })
           console.log(this.state.marker);
       }
-    
-
+    }
+    handleMapRegionChange = mapRegion => {
+        this.setState({ region:mapRegion });
+    };
 
 
     renderMap(){
-        if(this.state.pval == 2)
+        if(this.state.pval==2)
         {
             console.log('rendering map');
             return(
@@ -110,10 +122,36 @@ class LocationCreate extends Component {
                    region={this.state.region}
                    onLayout={this.onMapLayout}
                    onPress={this.onMapPress.bind(this)}
+                   showsUserLocation={true}
+                   onRegionChangeComplete={this.handleMapRegionChange.bind(this)}                   
                  >
-                     <Marker coordinate={this.state.marker}>
+                     <Marker coordinate={this.state.marker} >
                        
                      </Marker>
+                </MapView>
+               </View>
+            );
+        }else if(this.state.pval==1){
+            console.log('rendering map');
+            return(
+                
+                <View style={styles.container}>
+                <MapView
+                   onPress={e => console.log(e.nativeEvent)}
+                   style={styles.map}
+                   provider='google'
+                   mapType='standard'
+                   showsScale
+                   showsCompass
+                   showsPointsOfInterest
+                   showsBuildings
+                   region={this.state.region}
+                   onLayout={this.onMapLayout}
+                   onPress={this.onMapPress.bind(this)}
+                   showsUserLocation={true}
+                   
+                 >
+                   
                 </MapView>
                </View>
             );

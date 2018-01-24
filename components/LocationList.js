@@ -6,6 +6,7 @@ import ListItem from './common/ListItem';
 class LocationList extends Component{
     static navigationOptions = {
         title: 'LocationList',
+        headerLeft: null
     };
     constructor(props) {
         super(props);
@@ -16,22 +17,37 @@ class LocationList extends Component{
         };
         
     };
+   
+    componentDidMount(){
+        AsyncStorage.getItem('llist')
+        .then(req => JSON.parse(req))
+        .then((json) =>{
+             if(json){
+            console.log('get sucess');
+            console.log(json);
+                if(this.props.navigation.state.params.location){
+                 json.push(this.props.navigation.state.params.location);
+                 console.log('paramsreceived arrat updated');  
+                }
+                else{
+                    console.log('no prop');
+                }
+            this.setState({array:json})
+            }
+            else{
+                console.log('emptylist fetched for first time')
+            }  
+        })
+        .catch(error => console.log('geterror!'));
+ 
+
+    }
+
     componentWillMount(){
 
        
 
-        if(this.props.navigation.state.params.location){
-        
-        const ix=this.props.navigation.state.params.location;       
-            var newArray = this.state.array;
-            newArray.push(ix);
-            this.setState({array:newArray},()=>{ console.log(this.state.array)
-            });
-            AsyncStorage.setItem('myldata',JSON.stringify(newArray));
-        }
-        else{
-            console.log('no prop');
-        }
+       
     }   
     
     render()
@@ -47,7 +63,15 @@ class LocationList extends Component{
                     />
                     </CardSection>
                     <CardSection>
-                <Button onPress={ () => this.props.navigation.navigate('LocationCreate')} >
+                <Button onPress={ () => {
+                    const someArray =this.state.array.slice();
+                   // someArray.push(this.props.navigation.state.params.location);
+                    AsyncStorage.setItem('llist', JSON.stringify(someArray))
+                    .then((json) =>{ console.log('setsuccess!');console.log(someArray)})
+                    .catch(error => console.log('seterror!'));
+
+                    this.props.navigation.navigate('LocationCreate');
+                    }} >
                     Add 
                 </Button>
                 </CardSection>
