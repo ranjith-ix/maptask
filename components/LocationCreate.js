@@ -43,7 +43,9 @@ class LocationCreate extends Component {
     },
     }
     };
-
+    componentWillUnmount() {
+        navigator.geolocation.clearWatch(this.watchID);
+    }
     componentDidMount(){
   
         this.watchID = navigator.geolocation.watchPosition((position) => {

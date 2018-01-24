@@ -25,20 +25,25 @@ class LocationList extends Component{
              if(json){
             console.log('get sucess');
             console.log(json);
+            this.setState({array:json});
                 if(this.props.navigation.state.params.location){
                  json.push(this.props.navigation.state.params.location);
+                 this.setState({array:json})
+                 const someArray =this.state.array.slice();
+                 // someArray.push(this.props.navigation.state.params.location);
+                  AsyncStorage.setItem('llist', JSON.stringify(someArray))
                  console.log('paramsreceived arrat updated');  
                 }
                 else{
                     console.log('no prop');
                 }
-            this.setState({array:json})
+           
             }
             else{
                 console.log('emptylist fetched for first time')
             }  
         })
-        .catch(error => console.log('geterror!'));
+        .catch(error => console.log(error));
  
 
     }
