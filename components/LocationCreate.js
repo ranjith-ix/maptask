@@ -179,35 +179,36 @@ class LocationCreate extends Component {
     onCButtonPress(){
        if((this.state.tagname!=''))
        {
-        if((this.state.marker.latitude!=71.108524)&&(this.state.pval!=2))
-        {
+       
         const fprop= {Flatitude:'',Flongitude:'2',Ftag:''};
-        if(this.state.pval==1){
+        if(this.state.pval==1)
+        {
             fprop.Flatitude=this.state.lastLat;
             fprop.Flongitude=this.state.lastLong;
+            
+            fprop.Ftag=this.state.tagname;
+             console.log(fprop);
+        
+          this.props.navigation.navigate('LocationList', {location:fprop});
         }
-        else if(this.state.pval==2){
+        else if(this.state.pval==2)
+        {
+            if(this.state.marker.latitude!=71.108524)
+            {
             fprop.Flatitude=this.state.marker.latitude;
             fprop.Flongitude=this.state.marker.longitude;
-        }
-        fprop.Ftag=this.state.tagname;
-        console.log(fprop);
+           
+            fprop.Ftag=this.state.tagname;
+            console.log(fprop);
+       
+             this.props.navigation.navigate('LocationList', {location:fprop});
+            }
+            else{
+                alert('select a location on map');
+            }
+        }      
         
-        
-
-       // AsyncStorage.setItem(this.state.tagname,JSON.stringify(fprop),()=>{console.log('sucess')});
-       // return AsyncStorage.getItem(this.state.tagname).then((value) => {
-       //     console.log( JSON.parse(value));
-       // });
-     //   const keys=AsyncStorage.getAllKeys();
-        console.log(fprop);
-        
-      //  data.push(fprop);
-        this.props.navigation.navigate('LocationList', {location:fprop});
-        }
-        else{
-            alert('select a location on map');
-        }
+       
         }
         else{
             alert('Kindly give a valid tag name');
