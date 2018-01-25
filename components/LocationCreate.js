@@ -36,7 +36,7 @@ class LocationCreate extends Component {
           longitudeDelta: LONGITUDE_DELTA
         },
         marker: {
-            latitude: 22.108524,
+            latitude: 71.108524,
             longitude: 77.341066,
             latitudeDelta: LATITUDE_DELTA,
             longitudeDelta:LONGITUDE_DELTA
@@ -48,7 +48,7 @@ class LocationCreate extends Component {
     }
     componentDidMount(){
   
-        this.watchID = navigator.geolocation.watchPosition((position) => {
+        this.watchID = navigator.geolocation.getCurrentPosition((position) => {
             // Create the object to update this.state.mapRegion through the onRegionChange function
             let region = {
               latitude:       position.coords.latitude,
@@ -77,9 +77,12 @@ class LocationCreate extends Component {
         console.log(text);
     }
     lUpdate(value){
+        if(this.state.pval==1){
+            this.setState({visible:false});
+        }
         this.setState({pval:value},function(){console.log(this.state.pval)});
         this.setState({
-            region: { ...this.state.region,latitude:this.state.lastLat,longitude:this.state.lastLong},
+      //      region: { ...this.state.region,latitude:this.state.lastLat,longitude:this.state.lastLong},
         });
     }
 
@@ -89,6 +92,7 @@ class LocationCreate extends Component {
 
     onMapPress(e) {
         if(this.state.pval==2){
+         
         alert("coordinates:" + JSON.stringify(e.nativeEvent.coordinate))
         const coordinate=e.nativeEvent.coordinate;
           this.setState({
@@ -102,7 +106,23 @@ class LocationCreate extends Component {
         this.setState({ region:mapRegion });
     };
 
+    renderMarker(){
+        
+        if(this.state.marker.latitude!=71.108524)
+        {
+            return(
+            <Marker 
+            coordinate={this.state.marker} animateMarkerToCoordinate 
+            >
+                
+            </Marker>
+            );
+        }
+        else{
+            return
+        }
 
+    }
     renderMap(){
         if(this.state.pval==2)
         {
@@ -125,9 +145,8 @@ class LocationCreate extends Component {
                    showsUserLocation={true}
                    onRegionChangeComplete={this.handleMapRegionChange.bind(this)}                   
                  >
-                     <Marker coordinate={this.state.marker} >
-                       
-                     </Marker>
+                    {this.renderMarker()}
+
                 </MapView>
                </View>
             );
@@ -151,7 +170,6 @@ class LocationCreate extends Component {
                    showsUserLocation={true}
                    
                  >
-                   
                 </MapView>
                </View>
             );
@@ -159,7 +177,10 @@ class LocationCreate extends Component {
         return;
     }
     onCButtonPress(){
-       
+       if((this.state.tagname!=''))
+       {
+        if(this.state.marker.latitude!=71.108524)
+        {
         const fprop= {Flatitude:'',Flongitude:'2',Ftag:''};
         if(this.state.pval==1){
             fprop.Flatitude=this.state.lastLat;
@@ -183,6 +204,14 @@ class LocationCreate extends Component {
         
       //  data.push(fprop);
         this.props.navigation.navigate('LocationList', {location:fprop});
+        }
+        else{
+            alert('select a location on map');
+        }
+        }
+        else{
+            alert('Kindly give a valid tag name');
+        }
     }
 
         render()

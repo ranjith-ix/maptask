@@ -16,7 +16,6 @@ class App extends Component{
 const AppNavigator=StackNavigator({
     LocationList:{screen: LocationList},
     LocationCreate:{screen: LocationCreate},
-    
     MapLocate:{screen: MapLocate}
 });
 
