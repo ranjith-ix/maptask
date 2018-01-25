@@ -179,7 +179,7 @@ class LocationCreate extends Component {
     onCButtonPress(){
        if((this.state.tagname!=''))
        {
-        if(this.state.marker.latitude!=71.108524)
+        if((this.state.marker.latitude!=71.108524)&&(this.state.pval!=2))
         {
         const fprop= {Flatitude:'',Flongitude:'2',Ftag:''};
         if(this.state.pval==1){
