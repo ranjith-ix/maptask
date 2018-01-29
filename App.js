@@ -3,6 +3,7 @@ import { StackNavigator } from 'react-navigation';
 import LocationCreate from './components/LocationCreate';
 import LocationList from './components/LocationList';
 import MapLocate from './components/MapLocate';
+import LocationModify from './components/LocationModify';
 
 
 class App extends Component{
@@ -16,7 +17,8 @@ class App extends Component{
 const AppNavigator=StackNavigator({
     LocationList:{screen: LocationList},
     LocationCreate:{screen: LocationCreate},
-    MapLocate:{screen: MapLocate}
+    MapLocate:{screen: MapLocate},
+    LocationEdit:{screen:LocationModify}
 });
 
 export default App;

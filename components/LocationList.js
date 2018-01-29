@@ -13,7 +13,6 @@ class LocationList extends Component{
         this.state = {
             array:[],
             ldata:'init',
-        
         };
         
     };
@@ -27,7 +26,7 @@ class LocationList extends Component{
             console.log(json);
             this.setState({array:json});
                 if(this.props.navigation.state.params.location){
-                 json.push(this.props.navigation.state.params.location);
+                    json.push(this.props.navigation.state.params.location);
                  this.setState({array:json})
                  const someArray =this.state.array.slice();
                  // someArray.push(this.props.navigation.state.params.location);
@@ -35,6 +34,13 @@ class LocationList extends Component{
                  console.log('paramsreceived arrat updated');  
                 }
                 else{
+
+                    this.setState({array:json})
+                   const someArray =this.state.array.slice();
+                 // someArray.push(this.props.navigation.state.params.location);
+                  AsyncStorage.setItem('llist', JSON.stringify(someArray))
+
+
                     console.log('no prop');
                 }
            
@@ -48,13 +54,6 @@ class LocationList extends Component{
 
     }
 
-    componentWillMount(){
-
-       
-
-       
-    }   
-    
     render()
     {
        
@@ -64,7 +63,7 @@ class LocationList extends Component{
                     <FlatList
                     data={this.state.array}
                     extraData={this.state}
-                    renderItem={({item}) => <ListItem data={item} navigation={this.props.navigation}></ListItem>}
+                    renderItem={({item,index}) => <ListItem data={item} navigation={this.props.navigation} index={index}></ListItem>}
                     />
                     </CardSection>
                     <CardSection>

@@ -7,8 +7,9 @@ import { StackNavigator } from 'react-navigation';
 class ListItem extends Component{
 
     onLButtonPress(){
+        const ix=this.props.index;
         const {Flatitude,Flongitude,Ftag}=this.props.data;
-        this.props.navigation.navigate('MapLocate', {location:{Flatitude,Flongitude,Ftag}});
+        this.props.navigation.navigate('MapLocate', {location:{Flatitude,Flongitude,Ftag,ix}});
     }
     render(){
         console.log(this.props.data);

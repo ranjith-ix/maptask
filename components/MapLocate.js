@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import MapView, { Marker } from 'react-native-maps';
-import {View,Dimensions} from 'react-native';
-import {Card,CardSection} from './common';
+import {View,Dimensions,AsyncStorage} from 'react-native';
+import {Card,CardSection, Button} from './common';
 
 let { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -110,6 +110,27 @@ class MapLocate extends Component{
                </View>
             ); 
     }
+    dButtonPress(){
+        const index=this.props.navigation.state.params.location.ix;
+
+      AsyncStorage.getItem('llist')
+        .then(req => JSON.parse(req))
+        .then((json) =>{
+             if(json){
+                json.splice(index,1);
+                AsyncStorage.setItem('llist', JSON.stringify(json));
+                this.props.navigation.navigate('LocationList');
+            }
+        });
+
+    }
+
+    eButtonPress(){
+        const location=this.props.navigation.state.params.location;
+        console.log('oneditpress');
+        console.log('location');
+        this.props.navigation.navigate('LocationEdit',{location:location});
+    }
 
     render(){
       
@@ -119,6 +140,16 @@ class MapLocate extends Component{
         <Card>
         <CardSection style={styles.mapContainer}>
                 {this.renderMap()}
+        </CardSection>
+        <CardSection>
+            <Button onPress={this.eButtonPress.bind(this)}>
+                Edit    
+            </Button>
+        </CardSection>
+        <CardSection>
+            <Button onPress={this.dButtonPress.bind(this)}>
+                Delete    
+            </Button>
         </CardSection>
         </Card>
        </View>

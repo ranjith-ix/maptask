@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import{Text,View,Picker} from 'react-native';
 import {Card,CardSection,Input,Button} from './common';
-import { StyleSheet,Dimensions } from 'react-native';
+import { StyleSheet,Dimensions,AsyncStorage } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { StackNavigator } from 'react-navigation';
  
@@ -12,7 +12,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 class LocationCreate extends Component {
     
     static navigationOptions = {
-        title: 'Location Create',
+        title: 'Location Edit',
       }
     constructor(props) {
         super(props);
@@ -57,11 +57,19 @@ class LocationCreate extends Component {
               longitudeDelta: 0.00421*1.5
             }
             this.onRegionChange(region, region.latitude, region.longitude);
-          },
-         // (error) => console.log(new Date(), error),
-        // {enableHighAccuracy: true, timeout: 10000, maximumAge: 3000}
-        );
+          });
     };
+    componentWillMount(){
+        console.log(this.props);
+        if(this.props.navigation.state.params.location){
+            const ix=this.props.navigation.state.params.location; 
+            this.setState({
+                marker: { ...this.state.marker,latitude:ix.Flatitude,longitude:ix.Flongitude},
+                region: { ...this.state.region,latitude:ix.Flatitude,longitude:ix.Flongitude},
+                tagname:ix.Ftag,
+              });
+        }
+    }
 
     onRegionChange(region, lastLat, lastLong) {
         this.setState({
@@ -191,8 +199,10 @@ class LocationCreate extends Component {
             
             fprop.Ftag=this.state.tagname;
              console.log(fprop);
-        
-          this.props.navigation.navigate('LocationList', {location:fprop});
+             
+             this.onSave(fprop);
+             return;
+         // this.props.navigation.navigate('LocationList', {location:fprop});
         }
         else if(this.state.pval==2)
         {
@@ -203,8 +213,10 @@ class LocationCreate extends Component {
            
             fprop.Ftag=this.state.tagname;
             console.log(fprop);
-       
-             this.props.navigation.navigate('LocationList', {location:fprop});
+                
+            this.onSave(fprop);
+            return;
+             //this.props.navigation.navigate('LocationList', {location:fprop});
             }
             else{
                 alert('select a location on map');
@@ -216,6 +228,30 @@ class LocationCreate extends Component {
         else{
             alert('Kindly give a valid tag name');
         }
+    }
+    
+    onSave(fprop){
+        const index=this.props.navigation.state.params.location.ix;
+        console.log(index);
+        console.log('inside onsave');
+        AsyncStorage.getItem('llist')
+        .then(req => JSON.parse(req))
+        .then((json) =>{
+             if(json){
+                 const newArray=json.slice();
+                 newArray[index]=fprop;
+                
+                AsyncStorage.setItem('llist', JSON.stringify(newArray))
+                .then(x => AsyncStorage.getItem('llist')
+                .then((val) => { 
+               // this.setState({storageValue: val ? val : 'EMPTY'});
+                    console.log(val);
+                    console.log('asyncedited');
+                    this.props.navigation.navigate('LocationList');
+                }));
+            }
+        });
+
     }
 
         render()
@@ -252,7 +288,7 @@ class LocationCreate extends Component {
 
                     <CardSection>
                         <Button onPress={this.onCButtonPress.bind(this)}>
-                         Create    
+                         Save 
                         </Button>
                     </CardSection>
 
