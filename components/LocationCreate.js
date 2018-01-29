@@ -58,10 +58,13 @@ class LocationCreate extends Component {
             }
             this.onRegionChange(region, region.latitude, region.longitude);
           },
-         // (error) => console.log(new Date(), error),
-        // {enableHighAccuracy: true, timeout: 10000, maximumAge: 3000}
+          (error) => {
+            console.log(error);
+          },
+        //  {enableHighAccuracy: true, timeout: 20000, maximumAge: 10000}
+
         );
-    };
+    }
 
     onRegionChange(region, lastLat, lastLong) {
         this.setState({
