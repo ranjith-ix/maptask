@@ -2,6 +2,8 @@ import React,{Component} from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import {View,Dimensions,AsyncStorage} from 'react-native';
 import {Card,CardSection, Button} from './common';
+import AwesomeAlert from 'react-native-awesome-alerts';
+
 
 let { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -23,6 +25,7 @@ class MapLocate extends Component{
         lastLat: null,
         lastLong: null,
         addr:'',
+        showAlert: false,
        
         isMapReady: false,
         region: {
@@ -40,9 +43,19 @@ class MapLocate extends Component{
     }
     };
 
-    componentDidMount(){
+    showAlert = () => {
+        this.setState({
+          showAlert: true
+        });
+    };
+     
+      hideAlert = () => {
+        this.setState({
+          showAlert: false
+        });
+    };
 
-      
+    componentDidMount(){      
 
         this.watchID = navigator.geolocation.watchPosition((position) => {
             // Create the object to update this.state.mapRegion through the onRegionChange function
@@ -135,7 +148,7 @@ class MapLocate extends Component{
     }
 
     render(){
-      
+    const {showAlert} = this.state;
         
         return(
         <View style={styles.container}>
@@ -149,10 +162,30 @@ class MapLocate extends Component{
             </Button>
         </CardSection>
         <CardSection>
-            <Button onPress={this.dButtonPress.bind(this)}>
+            <Button onPress={() => {
+            this.showAlert();
+            }}>
                 Delete    
             </Button>
+           
         </CardSection>
+        <AwesomeAlert
+                show={showAlert}
+                showProgress={false}
+                title="Alert!"
+                message="Are you sure?"
+                closeOnTouchOutside={true}
+                closeOnHardwareBackPress={false}
+                showCancelButton={true}
+                showConfirmButton={true}
+                cancelText="No, cancel"
+                confirmText="Yes, delete it"
+                confirmButtonColor="#DD6B55"
+                onCancelPressed={() => {
+                    this.hideAlert();
+                }}
+                onConfirmPressed={this.dButtonPress.bind(this)}
+            />
         </Card>
        </View>
        );
