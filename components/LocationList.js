@@ -114,7 +114,7 @@ class LocationList extends Component{
 
         return(
             <View style={{marginTop:0}}>
-               <Card>
+               <Card style={{flexDirection:'column',flex:1}}>
                <CardSection>
                     <FlatList
                     data={this.state.array}
