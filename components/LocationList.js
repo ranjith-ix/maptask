@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import { Button, CardSection } from './common/index';
+import { Button, CardSection,Card } from './common/index';
 import {View,FlatList,Text,AsyncStorage,LayoutAnimation,Platform,UIManager } from 'react-native';
 import ListItem from './common/ListItem';
 import Swipeout from 'react-native-swipeout';
@@ -16,13 +16,23 @@ class LocationList extends Component{
         this.state = {
             array:[],
             ldata:'init',
-            showAlert: false,
+            showAlert:false,
             tindex:'',
-
         };
          if (Platform.OS === 'android') {
           UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
         }
+    };
+    showAlert = () => {
+        this.setState({
+          showAlert: true
+        });
+    };
+     
+    hideAlert = () => {
+        this.setState({
+          showAlert: false
+        });
     };
     componentWillUpdate(){
         LayoutAnimation.spring();
@@ -70,20 +80,22 @@ class LocationList extends Component{
             text: 'Delete',
             backgroundColor: 'red',
             underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-            onPress: () => {() => {
-                this.setState({tindex:index})
-                this.showAlert();
-                }}
-          }];
+            onPress: () => { this.delPressed(index) }
+        }];
         return(
             <Swipeout right={swipeBtns}
-            autoClose='true'
+            autoClose={true}
             backgroundColor= 'transparent'>
                 <ListItem data={item} navigation={this.props.navigation} index={index}></ListItem>
             </Swipeout>
         );
     }
-    deleteRow(index){
+    delPressed(index){
+        this.setState({tindex:index});
+        this.showAlert();
+    }
+    deleteRow(){
+        const index=this.state.tindex;
         AsyncStorage.getItem('llist')
         .then(req => JSON.parse(req))
         .then((json) =>{
@@ -95,23 +107,14 @@ class LocationList extends Component{
             }
         });
     }
-    showAlert = () => {
-        this.setState({
-          showAlert: true
-        });
-    };
-     
-    hideAlert = () => {
-        this.setState({
-          showAlert: false
-        });
-    };
+   
     render()
     {
         const {showAlert} = this.state;
 
         return(
             <View style={{marginTop:0}}>
+               <Card>
                <CardSection>
                     <FlatList
                     data={this.state.array}
@@ -147,8 +150,10 @@ class LocationList extends Component{
                     onCancelPressed={() => {
                         this.hideAlert();
                     }}
-                    onConfirmPressed={this.deleteRow(this.state.tindex)}
+                    onConfirmPressed={this.deleteRow.bind(this)}
                 />
+                </Card>
+               
             </View>
         );
 
