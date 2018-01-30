@@ -3,6 +3,7 @@ import { Button, CardSection } from './common/index';
 import {View,FlatList,Text,AsyncStorage,LayoutAnimation,Platform,UIManager } from 'react-native';
 import ListItem from './common/ListItem';
 import Swipeout from 'react-native-swipeout';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 class LocationList extends Component{
     static navigationOptions = {
@@ -15,6 +16,9 @@ class LocationList extends Component{
         this.state = {
             array:[],
             ldata:'init',
+            showAlert: false,
+            tindex:'',
+
         };
          if (Platform.OS === 'android') {
           UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -66,7 +70,10 @@ class LocationList extends Component{
             text: 'Delete',
             backgroundColor: 'red',
             underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
-            onPress: () => { this.deleteRow(index) }
+            onPress: () => {() => {
+                this.setState({tindex:index})
+                this.showAlert();
+                }}
           }];
         return(
             <Swipeout right={swipeBtns}
@@ -88,9 +95,21 @@ class LocationList extends Component{
             }
         });
     }
+    showAlert = () => {
+        this.setState({
+          showAlert: true
+        });
+    };
+     
+    hideAlert = () => {
+        this.setState({
+          showAlert: false
+        });
+    };
     render()
     {
-       
+        const {showAlert} = this.state;
+
         return(
             <View style={{marginTop:0}}>
                <CardSection>
@@ -113,6 +132,23 @@ class LocationList extends Component{
                     Add 
                 </Button>
                 </CardSection>
+                <AwesomeAlert
+                    show={showAlert}
+                    showProgress={false}
+                    title="Alert!"
+                    message="Are you sure?"
+                    closeOnTouchOutside={true}
+                    closeOnHardwareBackPress={false}
+                    showCancelButton={true}
+                    showConfirmButton={true}
+                    cancelText="No, cancel"
+                    confirmText="Yes, delete it"
+                    confirmButtonColor="#DD6B55"
+                    onCancelPressed={() => {
+                        this.hideAlert();
+                    }}
+                    onConfirmPressed={this.deleteRow(this.state.tindex)}
+                />
             </View>
         );
 
