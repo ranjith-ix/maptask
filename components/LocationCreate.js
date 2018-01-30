@@ -99,7 +99,7 @@ class LocationCreate extends Component {
     onMapPress(e) {
         if(this.state.pval==2){
          
-        alert("coordinates:" + JSON.stringify(e.nativeEvent.coordinate))
+      //  alert("coordinates:" + JSON.stringify(e.nativeEvent.coordinate))
         const coordinate=e.nativeEvent.coordinate;
           this.setState({
             marker: { ...this.state.marker,latitude:coordinate.latitude,longitude:coordinate.longitude},
