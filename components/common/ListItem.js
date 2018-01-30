@@ -1,24 +1,48 @@
 import React,{ Component } from 'react';
-import { Text, TouchableWithoutFeedback,View } from 'react-native';
+import { Text, TouchableWithoutFeedback,View, } from 'react-native';
 import { CardSection } from '../common';
 import { StackNavigator } from 'react-navigation';
+import axios from 'axios';
 
 
 class ListItem extends Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+           address:'Address Loading...',
+           rdata:[],
+        };
+        
+    };
+    componentDidMount(){
+        const {Flatitude,Flongitude,Ftag}=this.props.data;
+        const url='https://maps.googleapis.com/maps/api/geocode/json?latlng='+Flatitude+','+Flongitude+'&key=AIzaSyAxeeOEkd2oqC-KBHL0YwFU0hUIpInUpXQ';
+        console.log(url);
+        axios.get(url)
+        .then(response=>{
+            console.log(response.data.results[0].formatted_address);
+            this.setState({address:response.data.results[0].formatted_address});
+        });
+        console.log(this.state.rdata);
+    }
 
     onLButtonPress(){
         const ix=this.props.index;
         const {Flatitude,Flongitude,Ftag}=this.props.data;
-        this.props.navigation.navigate('MapLocate', {location:{Flatitude,Flongitude,Ftag,ix}});
+        const addr=this.state.address;
+        this.props.navigation.navigate('MapLocate', {location:{Flatitude,Flongitude,Ftag,ix,addr}});
     }
     render(){
         console.log(this.props.data);
         return(
             <TouchableWithoutFeedback onPress={this.onLButtonPress.bind(this)}>
             <View>
-            <CardSection >
+            <CardSection style={{flexWrap: 'wrap', flexDirection:'column'}}>
                 <Text style={styles.titleStyle}>
                     {this.props.data.Ftag}
+                </Text>
+                <Text style={styles.addressStyle} numberOfLines={1}>
+                    {this.state.address}
                 </Text>
             </CardSection>
             </View>
@@ -29,8 +53,19 @@ class ListItem extends Component{
 
 const styles={
     titleStyle:{
+        color:'green',
+        flex:2,
         fontSize:18,
-        paddingLeft:15
+        paddingLeft:15,
+        paddingTop:10,
+        paddingBottom:10,
+    },
+    addressStyle:{
+        flex:1,
+        paddingLeft:15,
+        paddingBottom:10,
+        fontSize:10,
+        paddingRight:30,
     }
 };
 export default ListItem;

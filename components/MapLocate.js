@@ -22,6 +22,7 @@ class MapLocate extends Component{
         mapRegion: null,
         lastLat: null,
         lastLong: null,
+        addr:'',
        
         isMapReady: false,
         region: {
@@ -72,6 +73,7 @@ class MapLocate extends Component{
             this.setState({
                 marker: { ...this.state.marker,latitude:ix.Flatitude,longitude:ix.Flongitude},
                 region: { ...this.state.region,latitude:ix.Flatitude,longitude:ix.Flongitude},
+                addr:ix.addr,
               });
         }
     }
@@ -103,7 +105,7 @@ class MapLocate extends Component{
                    onRegionChangeComplete={this.handleMapRegionChange.bind(this)}                   
 
                  >
-                     <Marker coordinate={this.state.marker} title={ix.Ftag} showTitle>
+                     <Marker coordinate={this.state.marker} title={ix.Ftag} showTitle description={this.state.addr}>
                        
                      </Marker>
                 </MapView>

@@ -1,7 +1,8 @@
 import React,{Component} from 'react';
 import { Button, CardSection } from './common/index';
-import {View,FlatList,Text,AsyncStorage } from 'react-native';
+import {View,FlatList,Text,AsyncStorage,LayoutAnimation,Platform,UIManager } from 'react-native';
 import ListItem from './common/ListItem';
+import Swipeout from 'react-native-swipeout';
 
 class LocationList extends Component{
     static navigationOptions = {
@@ -10,12 +11,18 @@ class LocationList extends Component{
     };
     constructor(props) {
         super(props);
+
         this.state = {
             array:[],
             ldata:'init',
         };
-        
+         if (Platform.OS === 'android') {
+          UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
+        }
     };
+    componentWillUpdate(){
+        LayoutAnimation.spring();
+    }
    
     componentDidMount(){
         AsyncStorage.getItem('llist')
@@ -53,7 +60,34 @@ class LocationList extends Component{
  
 
     }
-
+    
+    renderRow({item,index}){
+        let swipeBtns = [{
+            text: 'Delete',
+            backgroundColor: 'red',
+            underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+            onPress: () => { this.deleteRow(index) }
+          }];
+        return(
+            <Swipeout right={swipeBtns}
+            autoClose='true'
+            backgroundColor= 'transparent'>
+                <ListItem data={item} navigation={this.props.navigation} index={index}></ListItem>
+            </Swipeout>
+        );
+    }
+    deleteRow(index){
+        AsyncStorage.getItem('llist')
+        .then(req => JSON.parse(req))
+        .then((json) =>{
+             if(json){
+                json.splice(index,1);
+                AsyncStorage.setItem('llist', JSON.stringify(json));
+                this.setState({array:json})
+           //     this.props.navigation.navigate('LocationList');
+            }
+        });
+    }
     render()
     {
        
@@ -63,7 +97,7 @@ class LocationList extends Component{
                     <FlatList
                     data={this.state.array}
                     extraData={this.state}
-                    renderItem={({item,index}) => <ListItem data={item} navigation={this.props.navigation} index={index}></ListItem>}
+                    renderItem={this.renderRow.bind(this)}
                     />
                     </CardSection>
                     <CardSection>
