@@ -11,6 +11,7 @@ class ListItem extends Component{
         this.state = {
            address:'Address Loading...',
            rdata:[],
+           
         };
         
     };
@@ -35,37 +36,41 @@ class ListItem extends Component{
     render(){
         console.log(this.props.data);
         return(
-            <TouchableWithoutFeedback onPress={this.onLButtonPress.bind(this)}>
+            <TouchableWithoutFeedback onPress={this.onLButtonPress.bind(this)} 
+            onLongPress={this.props.onLongPress}>
             <View>
-            <CardSection style={{flexWrap: 'wrap', flexDirection:'column'}}>
-                <Text style={styles.titleStyle}>
+            <CardSection style={{flexWrap: 'wrap', flexDirection:'column',backgroundColor:this.props.bcolor}}>
+                <Text style={this.titleStyle()}>
                     {this.props.data.Ftag}
                 </Text>
-                <Text style={styles.addressStyle} numberOfLines={1}>
-                    {this.state.address}
+                <Text style={this.addressStyle()} numberOfLines={1}>
+                    {this.state.address}color
                 </Text>
             </CardSection>
             </View>
             </TouchableWithoutFeedback>
         );
     }
+    titleStyle=()=>{
+        return{
+                color:this.props.tcolor,
+                flex:2,
+                fontSize:18,
+                paddingLeft:15,
+                paddingTop:10,
+                paddingBottom:10,
+        };
+    }
+    addressStyle=()=>{
+        return{
+            color:this.props.acolor,
+            flex:1,
+            paddingLeft:15,
+            paddingBottom:10,
+            fontSize:10,
+            paddingRight:30,
+        }
+    }
 }
 
-const styles={
-    titleStyle:{
-        color:'green',
-        flex:2,
-        fontSize:18,
-        paddingLeft:15,
-        paddingTop:10,
-        paddingBottom:10,
-    },
-    addressStyle:{
-        flex:1,
-        paddingLeft:15,
-        paddingBottom:10,
-        fontSize:10,
-        paddingRight:30,
-    }
-};
 export default ListItem;

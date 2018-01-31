@@ -18,6 +18,14 @@ class LocationList extends Component{
             ldata:'init',
             showAlert:false,
             tindex:'',
+            acolor:'',
+            bcolor:'',
+            tcolor:'green',
+            sbcolor:'blue',
+            stcolor:'white',
+            sacolor:'white',
+            sindex:[],
+           
         };
          if (Platform.OS === 'android') {
           UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -82,13 +90,37 @@ class LocationList extends Component{
             underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
             onPress: () => { this.delPressed(index) }
         }];
+        var acolor,bcolor,tcolor;
+        if(this.state.sindex.includes(index)){
+         acolor=this.state.sacolor;
+         bcolor=this.state.sbcolor;
+         tcolor=this.state.stcolor;
+        }else{
+            acolor=this.state.acolor;
+            bcolor=this.state.bcolor;
+            tcolor=this.state.tcolor;
+        }
+        
         return(
             <Swipeout right={swipeBtns}
             autoClose={true}
             backgroundColor= 'transparent'>
-                <ListItem data={item} navigation={this.props.navigation} index={index}></ListItem>
+                <ListItem data={item} navigation={this.props.navigation} index={index}
+                onLongPress={this.onLPress(index)}
+                acolor={acolor}
+                bcolor={bcolor}
+                tcolor={tcolor}
+                >
+                </ListItem>
             </Swipeout>
         );
+    }
+    onLPress(index){
+          console.log('longpressed');
+           
+          const si=this.state.sindex.slice();
+          si.push(index);
+          this.setState({sindex:si});
     }
     delPressed(index){
         this.setState({tindex:index});
