@@ -183,77 +183,78 @@ class LocationCreate extends Component {
         return;
     }
     onCButtonPress(){
-       if((this.state.tagname!=''))
-       {
-       
-        const fprop= {Flatitude:'',Flongitude:'2',Ftag:''};
-        if(this.state.pval==1)
+        if((this.state.tagname!=''))
         {
-            fprop.Flatitude=this.state.lastLat;
-            fprop.Flongitude=this.state.lastLong;
+        
+         const fprop= {Flatitude:'',Flongitude:'2',Ftag:''};
+         if(this.state.pval==1)
+         {
+             fprop.Flatitude=this.state.lastLat;
+             fprop.Flongitude=this.state.lastLong;
+             
+             fprop.Ftag=this.state.tagname;
+              console.log(fprop);
+         
+              this.saveLocation(fprop);
+             // this.props.navigation.navigate('LocationList');
+         }
+         else if(this.state.pval==2)
+         {
+             if(this.state.marker.latitude!=71.108524)
+             {
+             fprop.Flatitude=this.state.marker.latitude;
+             fprop.Flongitude=this.state.marker.longitude;
             
-            fprop.Ftag=this.state.tagname;
+             fprop.Ftag=this.state.tagname;
              console.log(fprop);
-        
+ 
              this.saveLocation(fprop);
-            // this.props.navigation.navigate('LocationList');
-        }
-        else if(this.state.pval==2)
-        {
-            if(this.state.marker.latitude!=71.108524)
-            {
-            fprop.Flatitude=this.state.marker.latitude;
-            fprop.Flongitude=this.state.marker.longitude;
-           
-            fprop.Ftag=this.state.tagname;
-            console.log(fprop);
-
-            this.saveLocation(fprop);
-          //  this.props.navigation.navigate('LocationList');
-       
-            }
-            else{
-                alert('select a location on map');
-            }
-        }      
+           //  this.props.navigation.navigate('LocationList');
         
-       
-        }
-        else{
-            alert('Kindly give a valid tag name');
-        }
+             }
+             else{
+                 alert('select a location on map');
+             }
+         }      
+         
+        
+         }
+         else{
+             alert('Kindly give a valid tag name');
+         }
     }
-    saveLocation(fprop){
 
-        AsyncStorage.getItem('llist')
-        .then(req => JSON.parse(req))
-        .then((json) =>{
-             if(json){
-            console.log('get sucess in create');
-            console.log(json);
-          
-                json.push(fprop);
-                const someArray =json.slice();
-              
-                AsyncStorage.setItem('llist', JSON.stringify(someArray)).then(()=>{
-                    return;
-                });
-                AsyncStorage.setItem('llist',JSON.stringify(someArray))
-                .then(x => AsyncStorage.getItem('llist')
-                .then((val) => { 
-                    this.props.navigation.navigate('LocationList');
-                }));
-                console.log('location created array updated');  
-                }
+   saveLocation(fprop){
+ 
+         AsyncStorage.getItem('llist')
+         .then(req => JSON.parse(req))
+         .then((json) =>{
+              if(json){
+             console.log('get sucess in create');
+             console.log(json);
+           
+                 json.push(fprop);
+                 const someArray =json.slice();
                
-            else{
-                console.log('emptylist fetched for first time')
-            }  
-        })
-        .catch(error => console.log(error));
-        return;
+                 AsyncStorage.setItem('llist', JSON.stringify(someArray)).then(()=>{
+                     return;
+                 });
+                 AsyncStorage.setItem('llist',JSON.stringify(someArray))
+                 .then(x => AsyncStorage.getItem('llist')
+                 .then((val) => { 
+                     this.props.navigation.navigate('LocationList');
+                 }));
+                 console.log('location created array updated');  
+                 }
+                
+             else{
+                 console.log('emptylist fetched for first time')
+             }  
+         })
+         .catch(error => console.log(error));
+         return;
     }
-
+    
         render()
         {
          
