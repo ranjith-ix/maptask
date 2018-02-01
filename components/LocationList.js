@@ -18,8 +18,8 @@ class LocationList extends Component{
             ldata:'init',
             showAlert:false,
             tindex:'',
-            acolor:'',
-            bcolor:'',
+            acolor:'grey',
+            bcolor:'white',
             tcolor:'green',
             sbcolor:'blue',
             stcolor:'white',
@@ -135,20 +135,40 @@ class LocationList extends Component{
         );
     }
     onLButtonPress(item,index){
-
+        if(this.state.sindex.length==0){
         const ix=index;
         const {Flatitude,Flongitude,Ftag}=item;
         this.props.navigation.navigate('MapLocate', {location:{Flatitude,Flongitude,Ftag,ix}});
+        }
+        else
+        {
+            this.onLPress(index);
+        }
     }
-    onLPress(index){
+    onLPress(ele){
+        
+        if(this.state.sindex.includes(ele)){
+            console.log('longpressed an already selected element');
+          
+            console.log(this.state.sindex);
+            const si=this.state.sindex.slice();
+            const index=si.indexOf(ele);
+            si.splice(index,1);
+            this.setState({sindex:si});
+            const temp=this.state.array.slice();
+            this.setState({array:temp});
+        }
+        else{
           console.log('longpressed');
           
           console.log(this.state.sindex);
           const si=this.state.sindex.slice();
-          si.push(index);
+          si.push(ele);
           this.setState({sindex:si});
           const temp=this.state.array.slice();
           this.setState({array:temp});
+        }
+        
     }
     delPressed(index){
         this.setState({tindex:index});
