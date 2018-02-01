@@ -127,11 +127,18 @@ class LocationList extends Component{
                 onLongPress={(e)=>{this.onLPress(index)}}
                 acolor={acolor}
                 bcolor={bcolor}
-                tcolor={tcolor}
+                tcolor={tcolor}   onPress={(e)=>{this.onLButtonPress(item,index)} }
+
                 >
                 </ListItem>
             </Swipeout>
         );
+    }
+    onLButtonPress(item,index){
+
+        const ix=index;
+        const {Flatitude,Flongitude,Ftag}=item;
+        this.props.navigation.navigate('MapLocate', {location:{Flatitude,Flongitude,Ftag,ix}});
     }
     onLPress(index){
           console.log('longpressed');
