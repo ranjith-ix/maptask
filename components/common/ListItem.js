@@ -11,7 +11,6 @@ class ListItem extends Component{
         this.state = {
            address:'Address Loading...',
            rdata:[],
-           
         };
         
     };
@@ -36,15 +35,22 @@ class ListItem extends Component{
     render(){
         console.log(this.props.data);
         return(
-            <TouchableWithoutFeedback onPress={this.onLButtonPress.bind(this)} 
-            onLongPress={this.props.onLongPress}>
+            <TouchableWithoutFeedback 
+            onPress={this.onLButtonPress.bind(this)} 
+            onLongPress={this.props.onLongPress}
+            >
             <View>
-            <CardSection style={{flexWrap: 'wrap', flexDirection:'column',backgroundColor:this.props.bcolor}}>
+            <CardSection 
+            style={{
+                flexWrap: 'wrap', 
+                flexDirection:'column',
+                backgroundColor:this.props.bcolor
+            }}>
                 <Text style={this.titleStyle()}>
                     {this.props.data.Ftag}
                 </Text>
                 <Text style={this.addressStyle()} numberOfLines={1}>
-                    {this.state.address}color
+                    {this.state.address}
                 </Text>
             </CardSection>
             </View>
@@ -70,7 +76,8 @@ class ListItem extends Component{
             fontSize:10,
             paddingRight:30,
         }
-    }
+    }  
 }
+
 
 export default ListItem;

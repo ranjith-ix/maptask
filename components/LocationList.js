@@ -25,7 +25,6 @@ class LocationList extends Component{
             stcolor:'white',
             sacolor:'white',
             sindex:[],
-           
         };
          if (Platform.OS === 'android') {
           UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -45,8 +44,7 @@ class LocationList extends Component{
     componentWillUpdate(){
         LayoutAnimation.spring();
     }
-   
-    componentDidMount(){
+    componentWillMount(){
         AsyncStorage.getItem('llist')
         .then(req => JSON.parse(req))
         .then((json) =>{
@@ -54,25 +52,7 @@ class LocationList extends Component{
             console.log('get sucess');
             console.log(json);
             this.setState({array:json});
-                if(this.props.navigation.state.params.location){
-                    json.push(this.props.navigation.state.params.location);
-                 this.setState({array:json})
-                 const someArray =this.state.array.slice();
-                 // someArray.push(this.props.navigation.state.params.location);
-                  AsyncStorage.setItem('llist', JSON.stringify(someArray))
-                 console.log('paramsreceived arrat updated');  
-                }
-                else{
-
-                    this.setState({array:json})
-                   const someArray =this.state.array.slice();
-                 // someArray.push(this.props.navigation.state.params.location);
-                  AsyncStorage.setItem('llist', JSON.stringify(someArray))
-
-
-                    console.log('no prop');
-                }
-           
+                         
             }
             else{
                 console.log('emptylist fetched for first time')
@@ -82,46 +62,58 @@ class LocationList extends Component{
  
 
     }
-    
+      
     renderRow({item,index}){
+        console.log(index);
         let swipeBtns = [{
             text: 'Delete',
             backgroundColor: 'red',
             underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
             onPress: () => { this.delPressed(index) }
         }];
-        var acolor,bcolor,tcolor;
-        if(this.state.sindex.includes(index)){
-         acolor=this.state.sacolor;
-         bcolor=this.state.sbcolor;
-         tcolor=this.state.stcolor;
-        }else{
-            acolor=this.state.acolor;
-            bcolor=this.state.bcolor;
-            tcolor=this.state.tcolor;
+
+       
+        if(this.state.sindex.includes(index))
+        {
+           var acolor=this.state.sacolor;
+           var bcolor=this.state.sbcolor;
+           var tcolor=this.state.stcolor;
         }
-        
+        else
+        {
+           var acolor=this.state.acolor;
+           var bcolor=this.state.bcolor;
+           var tcolor=this.state.tcolor;
+        }
+
         return(
             <Swipeout right={swipeBtns}
             autoClose={true}
             backgroundColor= 'transparent'>
-                <ListItem data={item} navigation={this.props.navigation} index={index}
-                onLongPress={this.onLPress(index)}
-                acolor={acolor}
-                bcolor={bcolor}
-                tcolor={tcolor}
-                >
-                </ListItem>
+             
+             <ListItem data={item} 
+             navigation={this.props.navigation} 
+             index={index}
+             onLongPress={(e)=>{this.onItemLongPress(index)}}
+             acolor={acolor}
+             bcolor={bcolor}
+             tcolor={tcolor}
+             >
+             </ListItem>
+
             </Swipeout>
         );
     }
-    onLPress(index){
-          console.log('longpressed');
-           
-          const si=this.state.sindex.slice();
-          si.push(index);
-          this.setState({sindex:si});
+
+    onItemLongPress(index){
+        console.log('longpressed');
+        console.log(this.state.sindex);
+         
+        const si=this.state.sindex.slice();
+        si.push(index);
+        this.setState({sindex:si});
     }
+
     delPressed(index){
         this.setState({tindex:index});
         this.showAlert();
@@ -138,6 +130,7 @@ class LocationList extends Component{
            //     this.props.navigation.navigate('LocationList');
             }
         });
+      
     }
    
     render()
@@ -150,18 +143,11 @@ class LocationList extends Component{
                <CardSection>
                     <FlatList
                     data={this.state.array}
-                    extraData={this.state}
                     renderItem={this.renderRow.bind(this)}
                     />
                     </CardSection>
                     <CardSection>
                 <Button onPress={ () => {
-                    const someArray =this.state.array.slice();
-                   // someArray.push(this.props.navigation.state.params.location);
-                    AsyncStorage.setItem('llist', JSON.stringify(someArray))
-                    .then((json) =>{ console.log('setsuccess!');console.log(someArray)})
-                    .catch(error => console.log('seterror!'));
-
                     this.props.navigation.navigate('LocationCreate');
                     }} >
                     Add 

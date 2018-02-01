@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import{Text,View,Picker} from 'react-native';
 import {Card,CardSection,Input,Button} from './common';
-import { StyleSheet,Dimensions } from 'react-native';
+import { StyleSheet,Dimensions,AsyncStorage } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { StackNavigator } from 'react-navigation';
  
@@ -195,7 +195,8 @@ class LocationCreate extends Component {
             fprop.Ftag=this.state.tagname;
              console.log(fprop);
         
-          this.props.navigation.navigate('LocationList', {location:fprop});
+             this.saveLocation(fprop);
+            // this.props.navigation.navigate('LocationList');
         }
         else if(this.state.pval==2)
         {
@@ -206,8 +207,10 @@ class LocationCreate extends Component {
            
             fprop.Ftag=this.state.tagname;
             console.log(fprop);
+
+            this.saveLocation(fprop);
+          //  this.props.navigation.navigate('LocationList');
        
-             this.props.navigation.navigate('LocationList', {location:fprop});
             }
             else{
                 alert('select a location on map');
@@ -219,6 +222,36 @@ class LocationCreate extends Component {
         else{
             alert('Kindly give a valid tag name');
         }
+    }
+    saveLocation(fprop){
+
+        AsyncStorage.getItem('llist')
+        .then(req => JSON.parse(req))
+        .then((json) =>{
+             if(json){
+            console.log('get sucess in create');
+            console.log(json);
+          
+                json.push(fprop);
+                const someArray =json.slice();
+              
+                AsyncStorage.setItem('llist', JSON.stringify(someArray)).then(()=>{
+                    return;
+                });
+                AsyncStorage.setItem('llist',JSON.stringify(someArray))
+                .then(x => AsyncStorage.getItem('llist')
+                .then((val) => { 
+                    this.props.navigation.navigate('LocationList');
+                }));
+                console.log('location created array updated');  
+                }
+               
+            else{
+                console.log('emptylist fetched for first time')
+            }  
+        })
+        .catch(error => console.log(error));
+        return;
     }
 
         render()

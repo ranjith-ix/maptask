@@ -238,7 +238,7 @@ class LocationCreate extends Component {
         .then(req => JSON.parse(req))
         .then((json) =>{
              if(json){
-                 const newArray=json.slice();
+                 const newArray=json.slice();  
                  newArray[index]=fprop;
                 
                 AsyncStorage.setItem('llist', JSON.stringify(newArray))
@@ -296,9 +296,7 @@ class LocationCreate extends Component {
 
             );
         }
-
-
-};
+  };
 
 
 const styles={
