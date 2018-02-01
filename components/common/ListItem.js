@@ -30,12 +30,13 @@ class ListItem extends Component{
         const ix=this.props.index;
         const {Flatitude,Flongitude,Ftag}=this.props.data;
         const addr=this.state.address;
-        this.props.navigation.navigate('MapLocate', {location:{Flatitude,Flongitude,Ftag,ix,addr}});
+        this.props.navigation.navigate('MapLocate', {location:{Flatitude,Flongitude,Ftag,ix}});
     }
     render(){
         console.log(this.props.data);
         return(
             <TouchableWithoutFeedback 
+          //  delayLongPress={0}
             onPress={this.onLButtonPress.bind(this)} 
             onLongPress={this.props.onLongPress}
             >

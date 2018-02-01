@@ -3,6 +3,7 @@ import MapView, { Marker } from 'react-native-maps';
 import {View,Dimensions,AsyncStorage} from 'react-native';
 import {Card,CardSection, Button} from './common';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import axios from 'axios';
 
 
 let { width, height } = Dimensions.get('window');
@@ -24,8 +25,10 @@ class MapLocate extends Component{
         mapRegion: null,
         lastLat: null,
         lastLong: null,
-        addr:'',
+       // addr:'',
         showAlert: false,
+        address:'Address Loading...',
+        rdata:[],
        
         isMapReady: false,
         region: {
@@ -67,6 +70,16 @@ class MapLocate extends Component{
             }
             this.onRegionChange(region, region.latitude, region.longitude);
           });
+       
+        const {Flatitude,Flongitude,Ftag}=this.props.navigation.state.params.location;
+        const url='https://maps.googleapis.com/maps/api/geocode/json?latlng='+Flatitude+','+Flongitude+'&key=AIzaSyAxeeOEkd2oqC-KBHL0YwFU0hUIpInUpXQ';
+        console.log(url);
+        axios.get(url)
+        .then(response=>{
+            console.log(response.data.results[0].formatted_address);
+            this.setState({address:response.data.results[0].formatted_address});
+        });
+        console.log(this.state.rdata);
     };
 
     onRegionChange(region, lastLat, lastLong) {
@@ -86,7 +99,7 @@ class MapLocate extends Component{
             this.setState({
                 marker: { ...this.state.marker,latitude:ix.Flatitude,longitude:ix.Flongitude},
                 region: { ...this.state.region,latitude:ix.Flatitude,longitude:ix.Flongitude},
-                addr:ix.addr,
+                
               });
         }
     }
@@ -118,7 +131,7 @@ class MapLocate extends Component{
                    onRegionChangeComplete={this.handleMapRegionChange.bind(this)}                   
 
                  >
-                     <Marker coordinate={this.state.marker} title={ix.Ftag} showTitle description={this.state.addr}>
+                     <Marker coordinate={this.state.marker} title={ix.Ftag} showTitle description={this.state.address}>
                        
                      </Marker>
                 </MapView>

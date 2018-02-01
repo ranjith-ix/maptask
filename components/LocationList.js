@@ -110,13 +110,13 @@ class LocationList extends Component{
             onPress: () => { this.delPressed(index) }
         }];
         if(this.state.sindex.includes(index)){
-        var acolor=this.state.sacolor;
-        var bcolor=this.state.sbcolor;
-        var tcolor=this.state.stcolor;
+        var acolor=this.state.sacolor.slice();
+        var bcolor=this.state.sbcolor.slice();
+        var tcolor=this.state.stcolor.slice();
         }else{
-          var acolor=this.state.acolor;
-          var bcolor=this.state.bcolor;
-          var tcolor=this.state.tcolor;
+          var acolor=this.state.acolor.slice();
+          var bcolor=this.state.bcolor.slice();
+          var tcolor=this.state.tcolor.slice();
         }
         
         return(
@@ -140,6 +140,8 @@ class LocationList extends Component{
           const si=this.state.sindex.slice();
           si.push(index);
           this.setState({sindex:si});
+          const temp=this.state.array.slice();
+          this.setState({array:temp});
     }
     delPressed(index){
         this.setState({tindex:index});
