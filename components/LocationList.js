@@ -154,7 +154,7 @@ class LocationList extends Component{
              if(json){
                 json.splice(index,1);
                 AsyncStorage.setItem('llist', JSON.stringify(json));
-                this.setState({array:json})
+                this.setState({array:json},()=>{this.hideAlert();})
            //     this.props.navigation.navigate('LocationList');
             }
         });
