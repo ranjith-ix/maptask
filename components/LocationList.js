@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import { Button, CardSection,Card } from './common/index';
-import {View,FlatList,Text,AsyncStorage,LayoutAnimation,Platform,UIManager } from 'react-native';
+import {View,FlatList,Text,AsyncStorage,LayoutAnimation,Platform,UIManager, ScrollView } from 'react-native';
 import ListItem from './common/ListItem';
 import Swipeout from 'react-native-swipeout';
 import AwesomeAlert from 'react-native-awesome-alerts';
@@ -109,15 +109,14 @@ class LocationList extends Component{
             underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
             onPress: () => { this.delPressed(index) }
         }];
-        var acolor,bcolor,tcolor;
         if(this.state.sindex.includes(index)){
-         acolor=this.state.sacolor;
-         bcolor=this.state.sbcolor;
-         tcolor=this.state.stcolor;
+        var acolor=this.state.sacolor;
+        var bcolor=this.state.sbcolor;
+        var tcolor=this.state.stcolor;
         }else{
-            acolor=this.state.acolor;
-            bcolor=this.state.bcolor;
-            tcolor=this.state.tcolor;
+          var acolor=this.state.acolor;
+          var bcolor=this.state.bcolor;
+          var tcolor=this.state.tcolor;
         }
         
         return(
@@ -165,8 +164,9 @@ class LocationList extends Component{
         const {showAlert} = this.state;
 
         return(
-            <View style={{marginTop:0}}>
+            <View style={{marginTop:0,maxHeight:500}}>
                <Card style={{flexDirection:'column',flex:1}}>
+               <ScrollView>
                <CardSection>
                     <FlatList
                     data={this.state.array}
@@ -174,7 +174,9 @@ class LocationList extends Component{
                     renderItem={this.renderRow.bind(this)}
                     />
                     </CardSection>
+                    </ScrollView>
                     <CardSection>
+            
                 <Button onPress={ () => {
                     const someArray =this.state.array.slice();
                    // someArray.push(this.props.navigation.state.params.location);
