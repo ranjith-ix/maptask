@@ -4,11 +4,13 @@ import {View,FlatList,Text,AsyncStorage,LayoutAnimation,Platform,UIManager, Scro
 import ListItem from './common/ListItem';
 import Swipeout from 'react-native-swipeout';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import { Header } from './common';
+
 
 class LocationList extends Component{
     static navigationOptions = {
         title: 'LocationList',
-        headerLeft: null
+        header:null,
     };
     constructor(props) {
         super(props);
@@ -25,7 +27,7 @@ class LocationList extends Component{
             stcolor:'white',
             sacolor:'white',
             sindex:[],
-           
+            deleteT:''
         };
          if (Platform.OS === 'android') {
           UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -127,7 +129,8 @@ class LocationList extends Component{
                 onLongPress={(e)=>{this.onLPress(index)}}
                 acolor={acolor}
                 bcolor={bcolor}
-                tcolor={tcolor}   onPress={(e)=>{this.onLButtonPress(item,index)} }
+                tcolor={tcolor}   
+                onPress={(e)=>{this.onLButtonPress(item,index)} }
 
                 >
                 </ListItem>
@@ -135,6 +138,7 @@ class LocationList extends Component{
         );
     }
     onLButtonPress(item,index){
+
         if(this.state.sindex.length==0){
         const ix=index;
         const {Flatitude,Flongitude,Ftag}=item;
@@ -144,8 +148,11 @@ class LocationList extends Component{
         {
             this.onLPress(index);
         }
+        
+      
     }
     onLPress(ele){
+       
         
         if(this.state.sindex.includes(ele)){
             console.log('longpressed an already selected element');
@@ -168,7 +175,11 @@ class LocationList extends Component{
           const temp=this.state.array.slice();
           this.setState({array:temp});
         }
-        
+        if(this.state.sindex.length==0){
+            this.setState({deleteT:''});
+        }else{
+            this.setState({deleteT:'Delete'});
+        }
     }
     delPressed(index){
         this.setState({tindex:index});
@@ -187,6 +198,25 @@ class LocationList extends Component{
             }
         });
     }
+    onDeleteTPress(){
+       
+        AsyncStorage.getItem('llist')
+        .then(req => JSON.parse(req))
+        .then((json) =>{
+             if(json){
+               // json.splice(index,1);
+               const ts=this.state.sindex.slice();
+               for (var i =ts.length -1; i >= 0; i--)
+               json.splice(ts[i],1);
+       
+
+
+                AsyncStorage.setItem('llist', JSON.stringify(json));
+                this.setState({array:json},()=>{this.hideAlert();})
+           //     this.props.navigation.navigate('LocationList');
+            }
+        });
+    }
    
     render()
     {
@@ -194,6 +224,8 @@ class LocationList extends Component{
 
         return(
             <View style={{marginTop:0,maxHeight:500}}>
+            <Header headerText='LocationList' deleteText={this.state.deleteT} onDeleteTPress={this.onDeleteTPress}/>
+                
                <Card style={{flexDirection:'column',flex:1}}>
                <ScrollView>
                <CardSection>
